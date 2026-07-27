@@ -22,6 +22,16 @@ jobs:
         run: |
           sed -i "/^token_re=/ s/',re.I)/')/" scripts/temp_translate_reversing_fast.py
           sed -i "s/f'ZXQKEEP/f'zxqkeep/g" scripts/temp_translate_reversing_fast.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/temp_translate_reversing_fast.py')
+          s=p.read_text(encoding='utf-8')
+          old="    text='\\n'.join(out).strip()\n    text=re.sub(r'(?<=\\w)-\\n(?=\\w)','',text)\n    return text\n"
+          new="    text='\\n'.join(out).strip()\n    text=re.sub(r'(?<=\\w)-\\n\\s*(?=\\w)','',text)\n    normalized=[]\n    for block in re.split(r'\\n\\s*\\n',text):\n        block=block.strip()\n        if not block:\n            continue\n        normalized.append(block if codeish(block) else re.sub(r'\\s+',' ',block))\n    return '\\n\\n'.join(normalized)\n"
+          if old not in s:
+              raise RuntimeError('Expected clean() block was not found')
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
           python scripts/temp_translate_reversing_fast.py
       - name: Upload translation artifact
         uses: actions/upload-artifact@v4
