@@ -1,1 +1,1 @@
-Run the optimized temporary Vietnamese translation workflow for the user-provided book.
+Run the corrected optimized Vietnamese translation workflow for the user-provided book.
