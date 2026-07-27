@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: pip install --quiet requests pymupdf python-docx
       - name: Translate complete book and build files
-        run: python scripts/temp_translate_reversing.py
+        run: python scripts/temp_translate_reversing_fast.py
       - name: Upload translation artifact
         uses: actions/upload-artifact@v4
         with:
